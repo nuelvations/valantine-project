@@ -1,0 +1,39 @@
+{
+  "name": "valantine-project",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "npx ts-node app.ts",
+    "dev": "npx nodemon --exec ts-node app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuelvations/valantine-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nuelvations/valantine-project/issues"
+  },
+  "homepage": "https://github.com/nuelvations/valantine-project#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "crypto-random-string": "^5.0.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.2.1",
+    "openai": "^4.52.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
