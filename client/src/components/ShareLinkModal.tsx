@@ -25,7 +25,7 @@ export default function ShareLinkModal({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Answer  Valantine Questions',
+          title: 'Answer Tangle Questions',
           text: 'Check how well we match! Answer questions and let\'s see our compatibility score.',
           url: shareLink,
         });

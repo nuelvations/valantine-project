@@ -32,7 +32,7 @@ export default function LoginPage() {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
-              ❤️ Valantine
+              ❤️ Tangle
             </h1>
             <p className="text-gray-600 text-lg">Test Your Connection</p>
             <p className="text-gray-500 text-sm">Generate questions with ai, share with your partner/friend, and see how well you match!</p>

@@ -89,7 +89,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-3">
             <span className="text-3xl">❤️</span>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
-              Valantine
+              Tangle
             </h1>
           </div>
           <div className="flex items-center space-x-4">
