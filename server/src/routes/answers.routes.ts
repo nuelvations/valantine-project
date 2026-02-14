@@ -27,7 +27,8 @@ router.post("/submit", async (req: Request, res: Response) => {
     await Answer.create({
       questionId,
       username,
-      answers
+      answers,
+      userId,
     });
 
     res.status(201).json({ message: "Answers submitted successfully"});

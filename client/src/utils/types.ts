@@ -1,6 +1,6 @@
 export interface User {
   _id: string;
-  name: string;
+  username: string;
   email: string;
   regComplete: boolean;
   createdAt: Date;
@@ -26,6 +26,7 @@ export interface UserResponse {
 export interface Answer {
   _id: string;
   questionId: string;
+  username: string;
   userId: string;
   answers: Array<{
     question: string;
@@ -40,7 +41,7 @@ export interface ScoreComparison {
   question: string;
   user1Answer: string;
   user2Answer: string;
-  user1Name: string;
+  user1user: string;
   user2Name: string;
   compatibility: number;
   explanation: string;
