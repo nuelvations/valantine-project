@@ -17,6 +17,12 @@ router.post("/generate", async (req: Request, res: Response) => {
       return;
     }
 
+    const updateUser = await user.findById(userId);
+    if (!updateUser) {
+      res.status(404).json({ error: "id sent from client is invalid" });
+      return;
+    }
+
     const { moodDescription, questions } = await questionGenerator.generateQuestions(mood, choice, context);
 
     const question = new Question({
@@ -27,14 +33,13 @@ router.post("/generate", async (req: Request, res: Response) => {
       questions,
     });
 
+    updateUser.questionsCreated += 1;
+
+    await updateUser.save();
+
     await question.save();
 
-    res.status(201).json({
-      questionId: question._id,
-      mood,
-      moodDescription,
-      questions,
-    });
+    res.status(201).json({ questionId: question._id });
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -66,7 +71,7 @@ router.get("/:questionId", async (req: Request, res: Response) => {
   try {
     const { questionId } = req.params;
 
-    const question = await Question.findById(questionId);
+    const question = await Question.findById(questionId).lean();
 
     if (!question) {
       res.status(404).json({ error: "Questions not found" });
