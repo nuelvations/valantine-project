@@ -101,7 +101,7 @@ router.get("/:questionId/:userId", async (req: Request, res: Response) => {
   try {
     const { questionId, userId } = req.params;
 
-    const answer = await Answer.findOne({ questionId, userId });
+    const answer = await Answer.findOne({ questionId, userId }).lean();
 
     if (!answer) {
       res.status(404).json({ error: "Answers not found for this user and question" });
