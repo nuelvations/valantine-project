@@ -1,9 +1,10 @@
 import { Router, type Request, type Response } from "express";
-import { QuestionGeneratorService } from "../services/QuestionGeneratorService";
-import Question from "../models/question.model";
+import { QuestionGeneratorService } from "@/services/QuestionGeneratorService";
+import Question from "@/models/question.model";
 import user from "@/models/user.model";
 
 const router = Router();
+
 const questionGenerator = new QuestionGeneratorService();
 
 // Generate mood-based questions
@@ -38,6 +39,23 @@ router.post("/generate", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       error: "Failed to generate questions",
+      details: error instanceof Error ? error.message : "",
+    });
+  }
+});
+
+// Get questions by user ID (must be before :questionId)
+router.get("/user/:userId", async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params as { userId: string };
+
+    const questions = await Question.find({ user: userId }).sort({ createdAt: -1 }).lean();
+
+    res.status(200).json({ questions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Failed to retrieve questions",
       details: error instanceof Error ? error.message : "",
     });
   }

@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { ScoreComparatorService } from "../services/ScoreComparatorService.js";
+import { ScoreComparatorService } from "@/services/ScoreComparatorService";
 import Answer from "@/models/answer.model";
 import Question from "@/models/question.model";
 import Score from "@/models/score.model";
@@ -9,9 +9,9 @@ const router = Router();
 const scoreComparator = new ScoreComparatorService();
 
 // Compare answers and generate scores
-router.post("/compare", async (req: Request, res: Response) => {
+router.post("/compare/:questionId", async (req: Request, res: Response) => {
   try {
-    const { questionId } = req.body;
+    const { questionId } = req.params as { questionId: string };
 
     if (!questionId) {
       res.status(400).json({ error: "questionId is required" });
@@ -75,12 +75,12 @@ router.post("/compare", async (req: Request, res: Response) => {
   }
 });
 
-// Get score by ID
-router.get("/:scoreId", async (req: Request, res: Response) => {
+// Get score by question ID
+router.get("/:questionId", async (req: Request, res: Response) => {
   try {
-    const { scoreId } = req.params;
+    const { questionId } = req.params as { questionId: string };
 
-    const score = await Score.findById(scoreId);
+    const score = await Score.findOne({ questionId });
 
     if (!score) {
       res.status(404).json({ error: "Score not found" });
@@ -98,6 +98,33 @@ router.get("/:scoreId", async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({
       error: "Failed to retrieve score",
+      details: error instanceof Error ? error.message : "",
+    });
+  }
+});
+
+router.post("/:scoreId/claim", async (req: Request, res: Response) => {
+  try {
+    const { scoreId } = req.params as { scoreId: string };
+
+    const score = await Score.findById(scoreId);
+    if (!score) {
+      res.status(404).json({ error: "Score not found" });
+      return;
+    }
+
+    // Update score to indicate it's claimed
+    score.isClaimed = true;
+    await score.save();
+
+    res.status(200).json({
+      message: "Score claimed successfully",
+      score,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Failed to claim score",
       details: error instanceof Error ? error.message : "",
     });
   }
