@@ -15,7 +15,7 @@ export const walletClient = createWalletClient({
 export const claimTangle = async (recipientAddress: Address) => {
   try {
     await walletClient.writeContract({
-      address: "0xYourTangleContractAddress",
+      address: "0x5DA0E2A86e4B0A51462B87f448853c428621ab07",
       abi: parseAbi(["function transfer(address to, uint256 amount)"]),
       functionName: "transfer",
       args: [recipientAddress, parseEther("100")],
