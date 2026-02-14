@@ -34,10 +34,9 @@ export default function ResultsPage() {
         if (!scoreResponse.data) {
           const { data: compareData } = await compareAnswers(questionId!);
           setScore(compareData.score);
-          return;
+        } else {
+          setScore(scoreResponse.data);
         }
-
-        setScore(scoreResponse.data);
       }
     } catch (error) {
       console.error('Error fetching score:', error);
