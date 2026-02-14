@@ -10,7 +10,7 @@ dotenv.config({ quiet: true });
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:5173", "http://valantine-project-omega.vercel.app"] }));
+app.use(cors({ origin: ["http://localhost:5173", "https://valantine-project-omega.vercel.app"] }));
 app.use(helmet());
 app.use(express.json());
 
