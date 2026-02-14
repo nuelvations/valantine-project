@@ -118,7 +118,7 @@ export default function ResultsPage() {
     );
   }
 
-  const highCompatibility = score.overallScore >= 70;
+  const highCompatibility = score.overallScore >= 80;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50">
