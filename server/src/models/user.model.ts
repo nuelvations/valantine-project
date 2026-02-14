@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from "mongoose";
 
 
 export interface IUser extends Document {
-  name: string;
+  username: string;
   email: string;
   regComplete: boolean;
   totalPoints: number;
@@ -13,7 +13,7 @@ export interface IUser extends Document {
 }
 
 const User: Schema = new Schema({
-  name: {
+  username: {
     type: String,
     required: true 
   },
@@ -21,10 +21,6 @@ const User: Schema = new Schema({
     type: String,
     required: true,
     unique: true
-  },
-  regComplete: {
-    type: Boolean,
-    default: false
   },
   totalPoints: {
     type: Number,
