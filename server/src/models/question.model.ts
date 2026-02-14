@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document, type ObjectId } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IQuestion extends Document {
-  user: ObjectId;
+  user: string;
   mood: string;
   choice: string;
   moodDescription: string;
@@ -14,7 +14,6 @@ const QuestionSchema: Schema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true 
   },
   choice: {
     type: String,
