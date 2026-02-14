@@ -57,4 +57,4 @@ export const getScore = (questionId: string) =>
   apiClient.get(`/scores/${questionId}`);
 
 export const claimPoints = (scoreId: string) =>
-  apiClient.post(`/scores/${scoreId}/claim`);
+  apiClient.post(`/scores/claim/${scoreId}`);

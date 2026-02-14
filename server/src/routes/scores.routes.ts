@@ -80,35 +80,41 @@ router.post("/compare/:questionId", async (req: Request, res: Response) => {
   }
 });
 
-// Get score by question ID
-router.get("/:questionId", async (req: Request, res: Response) => {
+
+// Get all scores for a couple
+router.get("/couple/:coupleId", async (req: Request, res: Response) => {
   try {
-    const { questionId } = req.params as { questionId: string };
+    const { coupleId } = req.params;
 
-    const score = await Score.findOne({ questionId });
+    const scores = await Score.find({ coupleId }).sort({ createdAt: -1 });
 
-    if (!score) {
-      res.status(404).json({ error: "Score not found" });
+    if (scores.length === 0) {
+      res.status(200).json({
+        scoresCount: 0,
+        scores: [],
+      });
       return;
     }
 
     res.status(200).json({
-      scoreId: score._id,
-      mood: score.mood,
-      comparisons: score.comparisons,
-      overallScore: score.overallScore,
-      overallFeedback: score.overallFeedback,
+      scoresCount: scores.length,
+      scores: scores.map((s) => ({
+        scoreId: s._id,
+        mood: s.mood,
+        overallScore: s.overallScore,
+        createdAt: s.createdAt,
+      })),
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "Failed to retrieve score",
+      error: "Failed to retrieve scores",
       details: error instanceof Error ? error.message : "",
     });
   }
 });
 
-router.post("/:scoreId/claim", async (req: Request, res: Response) => {
+router.post("/claim/:scoreId", async (req: Request, res: Response) => {
   try {
     const { scoreId } = req.params as { scoreId: string };
 
@@ -148,34 +154,29 @@ router.post("/:scoreId/claim", async (req: Request, res: Response) => {
   }
 });
 
-// Get all scores for a couple
-router.get("/couple/:coupleId", async (req: Request, res: Response) => {
+// Get score by question ID
+router.get("/:questionId", async (req: Request, res: Response) => {
   try {
-    const { coupleId } = req.params;
+    const { questionId } = req.params as { questionId: string };
 
-    const scores = await Score.find({ coupleId }).sort({ createdAt: -1 });
+    const score = await Score.findOne({ questionId });
 
-    if (scores.length === 0) {
-      res.status(200).json({
-        scoresCount: 0,
-        scores: [],
-      });
+    if (!score) {
+      res.status(404).json({ error: "Score not found" });
       return;
     }
 
     res.status(200).json({
-      scoresCount: scores.length,
-      scores: scores.map((s) => ({
-        scoreId: s._id,
-        mood: s.mood,
-        overallScore: s.overallScore,
-        createdAt: s.createdAt,
-      })),
+      scoreId: score._id,
+      mood: score.mood,
+      comparisons: score.comparisons,
+      overallScore: score.overallScore,
+      overallFeedback: score.overallFeedback,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: "Failed to retrieve scores",
+      error: "Failed to retrieve score",
       details: error instanceof Error ? error.message : "",
     });
   }
