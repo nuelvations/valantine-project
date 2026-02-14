@@ -1,4 +1,4 @@
-import getClient from "./index.ts";
+import getClient from ".";
 
 const client = getClient();
 

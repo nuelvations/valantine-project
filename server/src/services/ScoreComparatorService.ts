@@ -1,5 +1,5 @@
 import getClient from ".";
-import type { IScoreComparison } from "../models/score.model";
+import type { IScoreComparison } from "@/models/score.model";
 
 const client = getClient();
 
