@@ -23,6 +23,7 @@ export default function PartnerSignupPage() {
   useEffect(() => {
     if (user && question) {
       handleAutoSignup();
+      setLoading(false);
     }
   }, [user, question]);
 
