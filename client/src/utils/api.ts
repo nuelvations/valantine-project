@@ -17,7 +17,7 @@ export const getUserStats = (userId: string) =>
   apiClient.get(`/users/${userId}/stats`);
 
 export const loginUser = (email: string, username: string) =>
-  apiClient.patch(`/user/register`, { email, username });
+  apiClient.patch(`/users/register`, { email, username });
 
 export const checkUser = (email: string) =>
   apiClient.get(`/users/check-user?email=${email}`);

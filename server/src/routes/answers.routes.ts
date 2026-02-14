@@ -40,31 +40,6 @@ router.post("/submit", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:questionId/:userId", async (req: Request, res: Response) => {
-  try {
-    const { questionId, userId } = req.params;
-
-    const answer = await Answer.findOne({ questionId, userId });
-
-    if (!answer) {
-      res.status(404).json({ error: "Answers not found for this user and question" });
-      return;
-    }
-
-    res.status(200).json({
-      answerId: answer._id,
-      username: answer.username,
-      answers: answer.answers,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "Failed to retrieve answers",
-      details: error instanceof Error ? error.message : "",
-    });
-  }
-});
-
 router.get("/has-partner-answered/:questionId", async (req: Request, res: Response) => {
   try {
     const { questionId } = req.params;
@@ -105,6 +80,31 @@ router.get("/by-question/:questionId", async (req: Request, res: Response) => {
         username: a.username,
         answers: a.answers,
       })),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Failed to retrieve answers",
+      details: error instanceof Error ? error.message : "",
+    });
+  }
+});
+
+router.get("/:questionId/:userId", async (req: Request, res: Response) => {
+  try {
+    const { questionId, userId } = req.params;
+
+    const answer = await Answer.findOne({ questionId, userId });
+
+    if (!answer) {
+      res.status(404).json({ error: "Answers not found for this user and question" });
+      return;
+    }
+
+    res.status(200).json({
+      answerId: answer._id,
+      username: answer.username,
+      answers: answer.answers,
     });
   } catch (error) {
     console.error(error);

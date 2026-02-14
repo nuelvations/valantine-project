@@ -1,6 +1,5 @@
 import { Router, type Request, type Response } from "express";
 import user from "@/models/user.model";
-import cryptoRandomString from "crypto-random-string";
 
 const router = Router();
 
@@ -18,11 +17,11 @@ router
         return;
       }
 
-      const existingUser = await user.findOne({ email });
+      const existingUser = await user.findOne({ $or: [{ email }, { username }] });
 
       if (existingUser) {
         res.status(400).json({
-          error: "user are already registered",
+          error: "user is already registered or username exists",
         });
         return;
       }
@@ -36,6 +35,25 @@ router
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to register user" });
+    }
+  }).get("/check-user", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.query as { email: string };
+
+      if (!email) {
+        res.status(400).json({ error: "email query parameter is required" });
+        return;
+      }
+
+      const userFound = await user.findOne({ email });
+
+      res.status(200).json({
+        exists: !!userFound,
+        user: userFound || null,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to check user" });
     }
   })
   .get("/:userId", async (req: Request, res: Response) => {
@@ -57,25 +75,6 @@ router
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to retrieve user" });
-    }
-  }).get("/check-user", async (req: Request, res: Response) => {
-    try {
-      const { email } = req.query;
-
-      if (!email) {
-        res.status(400).json({ error: "email query parameter is required" });
-        return;
-      }
-
-      const userFound = await user.findOne({ email });
-
-      res.status(200).json({
-        exists: !!userFound,
-        user: userFound || null,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Failed to check user" });
     }
   });
 
