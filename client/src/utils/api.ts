@@ -57,5 +57,5 @@ export const compareAnswers = (questionId: string) =>
 export const getScore = (questionId: string) =>
   apiClient.get(`/scores/${questionId}`);
 
-export const claimPoints = (scoreId: string) =>
-  apiClient.post(`/scores/claim/${scoreId}`);
+export const claimPoints = (scoreId: string, userId: string, recipientAddress: string) =>
+  apiClient.post(`/scores/claim/${scoreId}?userId=${userId}&recipientAddress=${recipientAddress}`);

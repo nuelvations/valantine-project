@@ -4,6 +4,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import toast from 'react-hot-toast';
 import { getScore, hasPartnerAnswered, claimPoints, compareAnswers } from '../utils/api';
 import type { Score } from '../utils/types';
+import { getUser } from '../utils/auth';
 
 export default function ResultsPage() {
   const { questionId } = useParams<{ questionId: string }>();
@@ -51,12 +52,15 @@ export default function ResultsPage() {
   const handleClaim = async () => {
     try {
       setClaiming(true);
-      await claimPoints(questionId!);
+      const storedUser = getUser();
+
+      await claimPoints(questionId!, storedUser._id, user?.wallet?.address as string);
+
       toast.success('Points claimed successfully!');
       navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error claiming points:', error);
-      toast.error('Failed to claim points');
+      toast.error(error.message || 'Failed to claim points');
     } finally {
       setClaiming(false);
     }
