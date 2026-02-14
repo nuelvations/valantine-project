@@ -41,7 +41,7 @@ export interface ScoreComparison {
   question: string;
   user1Answer: string;
   user2Answer: string;
-  user1user: string;
+  user1Name: string;
   user2Name: string;
   compatibility: number;
   explanation: string;
