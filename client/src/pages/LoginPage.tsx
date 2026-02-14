@@ -1,16 +1,18 @@
 import { usePrivy } from '@privy-io/react-auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setUser } from '../utils/auth';
 import { checkUser } from '../utils/api';
 
 export default function LoginPage() {
   const { login, user } = usePrivy();
+  const [checking, setChecking] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       (async () => {
+        setChecking(true);
         const { data } = await checkUser(user.email?.address as string);
         if (data?.exists) {
           setUser(data.user);
@@ -18,6 +20,7 @@ export default function LoginPage() {
         } else {
           navigate('/username-setup');
         }
+        setChecking(false);
       })();
     }
   }, [user, navigate]);
@@ -62,10 +65,11 @@ export default function LoginPage() {
 
           {/* Login Button */}
           <button
+          disabled={checking}
             onClick={() => login()}
-            className="w-full bg-gradient-to-r from-pink-600 to-red-600 hover:from-pink-700 hover:to-red-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105 shadow-lg"
+            className={`w-full bg-gradient-to-r from-pink-600 shadow-lg to-red-600 text-white font-bold py-3 px-6 rounded-lg ${checking ? "" : "transition duration-300 transform hover:scale-105 hover:from-pink-700 hover:to-red-700"}`}
           >
-            Sign In with Email
+            {checking ? "Signing In..." : "Sign In with Email"}
           </button>
 
           {/* Footer */}
