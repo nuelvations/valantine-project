@@ -6,12 +6,14 @@ const client = getClient();
 interface ComparisonResult {
   comparisons: IScoreComparison[];
   overallScore: number;
+  totalPoints: number,
   overallFeedback: string;
 }
 
 export class ScoreComparatorService {
   async compareAnswers(
     mood: string,
+    choice: string,
     user1Name: string,
     user2Name: string,
     questions: string[],
@@ -23,7 +25,7 @@ export class ScoreComparatorService {
       .join("\n\n");
 
     const prompt = `
-      Compare the following question-answer pairs from ${user1Name} and ${user2Name}:
+      Compare the following question-answer pairs from ${user1Name} and ${user2Name}, with choice ${choice}:
 
       ${answerPairs}
 
@@ -32,7 +34,8 @@ export class ScoreComparatorService {
       2. The level of compatibility and understanding shown
       3. Whether they truly know each other
       4. How their answers reflect the "${mood}" mood
-
+      5. Assign points to each question based on the answer comparisim
+      6. if the choice is game, don't be serious with the comparisms
 
       Provide a detailed analysis in the following JSON format:
       {
@@ -45,14 +48,17 @@ export class ScoreComparatorService {
             "user1Name": "user1's name",
             "user2Name": "user2's name",
             "compatibility": 85,
-            "explanation": "why these answers are/aren't compatible, insights"
+            "explanation": "why these answers are/aren't compatible, insights",
+            "points": 3
           }
         ],
         "overallScore": 82,
+        totalPoints: 20,
         "overallFeedback": "A comprehensive summary of their compatibility, what they do well together, and areas to strengthen their connection"
       }
 
       Compatibility scores should be 0-100.
+      Points scores should be from 0-4.
     `;
 
     const message = await client.chat.completions.create({
@@ -61,7 +67,7 @@ export class ScoreComparatorService {
       messages: [
         {
           role: "system",
-          content: "You are a relationship coach creating personalized questions for couples based on their mood.",
+          content: "You are a relationship coach reviewing personalized questions and their answers from couples based on their mood.",
         },
         {
           role: "user",
@@ -83,6 +89,7 @@ export class ScoreComparatorService {
       comparisons: result.comparisons,
       overallScore: result.overallScore,
       overallFeedback: result.overallFeedback,
+      totalPoints: result.totalPoints,
     };
   }
 }
