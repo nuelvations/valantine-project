@@ -42,7 +42,7 @@ export default function PartnerSignupPage() {
 
   const handleAutoSignup = async () => {
     try {
-      const userEmail = user?.email as unknown as string;
+      const userEmail = user?.email?.address as unknown as string;
       if (userEmail) {
         const { data } = await checkUser(userEmail);
 
