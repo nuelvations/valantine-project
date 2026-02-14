@@ -16,12 +16,12 @@ export interface IScore extends Document {
   mood: string;
   user1Id: string;
   user2Id: string;
-  isClaimed: boolean;
+  user1Claimed: boolean;
+  user2Claimed: boolean;
   totalPoints: number;
   comparisons: IScoreComparison[];
   overallScore: number;
   overallFeedback: string;
-  claimed: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -43,7 +43,11 @@ const ScoreSchema: Schema = new Schema({
     type: String,
     required: true 
   },
-  isClaimed: {
+  user1Claimed: {
+    type: Boolean,
+    default: false
+  },
+  user2Claimed: {
     type: Boolean,
     default: false
   },
