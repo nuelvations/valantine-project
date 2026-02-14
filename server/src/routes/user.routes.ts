@@ -8,12 +8,12 @@ const router = Router();
 router
   .post("/register", async (req: Request, res: Response) => {
     try {
-      const { name, email } = req.body;
+      const { username, email } = req.body;
 
-      if (!name || !email) {
+      if (!username || !email) {
         res.status(400).json({
           error:
-            "user must have name and email fields",
+            "user must have username and email fields",
         });
         return;
       }
@@ -27,7 +27,7 @@ router
         return;
       }
 
-      const newUser = await user.create({ email, name });
+      const newUser = await user.create({ email, username });
 
       res.status(201).json({
         message: "User registered successfully",

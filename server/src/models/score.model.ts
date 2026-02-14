@@ -5,6 +5,8 @@ export interface IScoreComparison {
   question: string;
   user1Answer: string;
   user2Answer: string;
+  user1Name: string;
+  user2Name: string;
   compatibility: number;
   explanation: string;
 }
@@ -57,9 +59,17 @@ const ScoreSchema: Schema = new Schema({
       type: String,
       required: true 
     },
-    user2Answer: { 
+    user2Answer: {
       type: String,
       required: true 
+    },
+    user1Name: {
+      type: String,
+      required: true
+    },
+    user2Name: {
+      type: String,
+      required: true
     },
     compatibility: { 
       type: Number,

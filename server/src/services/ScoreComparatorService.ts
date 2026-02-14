@@ -32,7 +32,7 @@ export class ScoreComparatorService {
       2. The level of compatibility and understanding shown
       3. Whether they truly know each other
       4. How their answers reflect the "${mood}" mood
-      
+
 
       Provide a detailed analysis in the following JSON format:
       {
@@ -42,6 +42,8 @@ export class ScoreComparatorService {
             "question": "the question text",
             "user1Answer": "user1's answer",
             "user2Answer": "user2's answer",
+            "user1Name": "user1's name",
+            "user2Name": "user2's name",
             "compatibility": 85,
             "explanation": "why these answers are/aren't compatible, insights"
           }

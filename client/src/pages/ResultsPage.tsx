@@ -169,7 +169,7 @@ export default function ResultsPage() {
         {/* Detailed Comparisons */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Question-by-Question Comparison</h2>
-
+ 
           {score.comparisons.map((comparison, index) => (
             <div key={index} className="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
               {/* Question */}
@@ -195,7 +195,7 @@ export default function ResultsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 {/* User 1 Answer */}
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Your Answer</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-2">{comparison.user1Name}</p>
                   <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
                     <p className="text-gray-800">{comparison.user1Answer}</p>
                   </div>
@@ -203,7 +203,7 @@ export default function ResultsPage() {
 
                 {/* User 2 Answer */}
                 <div>
-                  <p className="text-sm font-semibold text-gray-700 mb-2">Your Partner's Answer</p>
+                  <p className="text-sm font-semibold text-gray-700 mb-2">{comparison.user2Name}</p>
                   <div className="bg-pink-50 border-l-4 border-pink-500 p-4 rounded">
                     <p className="text-gray-800">{comparison.user2Answer}</p>
                   </div>
