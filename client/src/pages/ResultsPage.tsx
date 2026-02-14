@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { usePrivy } from '@privy-io/react-auth';
 import toast from 'react-hot-toast';
-import { getScore, hasPartnerAnswered, claimPoints } from '../utils/api';
+import { getScore, hasPartnerAnswered, claimPoints, compareAnswers } from '../utils/api';
 import type { Score } from '../utils/types';
 
 export default function ResultsPage() {
@@ -24,12 +24,19 @@ export default function ResultsPage() {
       setLoading(true);
 
       // Check if partner has answered
-      const partnerCheck = await hasPartnerAnswered(questionId!);
-      setPartnerAnswered(partnerCheck.data.hasAnswered);
+      const { data } = await hasPartnerAnswered(questionId!);
+      setPartnerAnswered(data.hasAnswered);
 
       // If partner has answered, get the score
-      if (partnerCheck.data.hasAnswered) {
+      if (data.hasAnswered && !score) {
         const scoreResponse = await getScore(questionId!);
+
+        if (!scoreResponse.data) {
+          const { data: compareData } = await compareAnswers(questionId!);
+          setScore(compareData.score);
+          return;
+        }
+
         setScore(scoreResponse.data);
       }
     } catch (error) {
@@ -100,7 +107,7 @@ export default function ResultsPage() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-red-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full text-center">
-          <p className="text-gray-600">Unable to load results</p>
+          <p className="text-gray-600">Unable to load results, partner hasn't answered yet.</p>
           <button
             onClick={() => navigate('/dashboard')}
             className="mt-4 text-pink-600 hover:text-pink-700 font-semibold"

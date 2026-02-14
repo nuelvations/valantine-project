@@ -92,10 +92,6 @@ const ScoreSchema: Schema = new Schema({
   overallFeedback: { 
     type: String,
     required: true 
-  },
-  claimed: {
-    type: Boolean,
-    default: false
   }
 }, { timestamps: true });
 

@@ -66,10 +66,7 @@ router.post("/compare/:questionId", async (req: Request, res: Response) => {
     });
 
     res.status(201).json({
-      scoreId: score._id,
-      comparisons,
-      overallScore,
-      overallFeedback,
+      score
     });
   } catch (error) {
     console.error(error);
@@ -79,7 +76,6 @@ router.post("/compare/:questionId", async (req: Request, res: Response) => {
     });
   }
 });
-
 
 // Get all scores for a couple
 router.get("/couple/:coupleId", async (req: Request, res: Response) => {
@@ -159,20 +155,14 @@ router.get("/:questionId", async (req: Request, res: Response) => {
   try {
     const { questionId } = req.params as { questionId: string };
 
-    const score = await Score.findOne({ questionId });
+    const score = await Score.findOne({ questionId }).lean();
 
     if (!score) {
       res.status(404).json({ error: "Score not found" });
       return;
     }
 
-    res.status(200).json({
-      scoreId: score._id,
-      mood: score.mood,
-      comparisons: score.comparisons,
-      overallScore: score.overallScore,
-      overallFeedback: score.overallFeedback,
-    });
+    res.status(200).json({ score });
   } catch (error) {
     console.error(error);
     res.status(500).json({

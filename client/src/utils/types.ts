@@ -51,6 +51,7 @@ export interface Score {
   _id: string;
   questionId: string;
   mood: string;
+  totalPoints: number;
   comparisons: ScoreComparison[];
   overallScore: number;
   overallFeedback: string;

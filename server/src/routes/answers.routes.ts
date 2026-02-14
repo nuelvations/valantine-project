@@ -18,9 +18,15 @@ router.post("/submit", async (req: Request, res: Response) => {
     }
 
     // Verify question exists
-    const question = await Question.findById(questionId);
+    const question = await Question.findById(questionId).lean();
     if (!question) {
       res.status(404).json({ error: "Question not found" });
+      return;
+    }
+
+    const alreadyAnswered = await Answer.findOne({ questionId, userId }).lean();
+    if (alreadyAnswered) {
+      res.status(400).json({ error: "User has already submitted answers for this question" });
       return;
     }
 
@@ -45,7 +51,7 @@ router.get("/has-partner-answered/:questionId", async (req: Request, res: Respon
   try {
     const { questionId } = req.params;
 
-    const answers = await Answer.find({ questionId });
+    const answers = await Answer.find({ questionId }).lean();
 
     if (answers.length <= 1) {
       res.status(200).json({ hasAnswered: false });
