@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import * as dotenv from "dotenv";
-import appRoutes from "@/routes/app.routes";
+import appRoutes from "@/routes";
 import { PORT, DB_URL } from "@/utils/env.utils";
 
 dotenv.config({ quiet: true });
