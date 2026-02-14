@@ -3,6 +3,7 @@ import { ScoreComparatorService } from "@/services/ScoreComparatorService";
 import Answer from "@/models/answer.model";
 import Question from "@/models/question.model";
 import Score from "@/models/score.model";
+import userModel from "@/models/user.model";
 
 const router = Router();
 
@@ -42,8 +43,9 @@ router.post("/compare/:questionId", async (req: Request, res: Response) => {
     const user2AnswerStrings = answer2!.answers.map((a) => a.answer);
 
     // Compare answers using OpenAI
-    const { comparisons, overallScore, overallFeedback } = await scoreComparator.compareAnswers(
+    const { comparisons, overallScore, overallFeedback, totalPoints } = await scoreComparator.compareAnswers(
       question.mood,
+      question.choice,
       answer1!.username,
       answer2!.username,
       question.questions,
@@ -55,9 +57,12 @@ router.post("/compare/:questionId", async (req: Request, res: Response) => {
     const score = await Score.create({
       questionId,
       mood: question.mood,
+      user1Id: answer1?.userId,
+      user2Id: answer2?.userId,
       comparisons,
       overallScore,
       overallFeedback,
+      totalPoints
     });
 
     res.status(201).json({
@@ -113,9 +118,22 @@ router.post("/:scoreId/claim", async (req: Request, res: Response) => {
       return;
     }
 
+    const user1 = await userModel.findById(score.user1Id);
+    const user2 = await userModel.findById(score.user2Id);
+    if (!user1 || !user2) {
+      res.status(400).json({ error: " one of the user id attached is invalid" });
+      return;
+    }
+
     // Update score to indicate it's claimed
     score.isClaimed = true;
+
+    user1.totalPoints += score.totalPoints;
+    user2.totalPoints += score.totalPoints;
+
     await score.save();
+    await user1.save();
+    await user2.save();
 
     res.status(200).json({
       message: "Score claimed successfully",
