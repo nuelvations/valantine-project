@@ -29,13 +29,13 @@ export default function ResultsPage() {
 
       // If partner has answered, get the score
       if (data.hasAnswered && !score) {
-        const scoreResponse = await getScore(questionId!);
+        const { data: scoreData } = await getScore(questionId!);
 
-        if (!scoreResponse.data) {
+        if (!scoreData.score) {
           const { data: compareData } = await compareAnswers(questionId!);
           setScore(compareData.score);
         } else {
-          setScore(scoreResponse.data);
+          setScore(scoreData.score);
         }
       }
     } catch (error) {
