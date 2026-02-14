@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setUser } from '../utils/auth';
 import { checkUser } from '../utils/api';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const { login, user } = usePrivy();
@@ -10,7 +11,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) {
+    try {
+      if (user) {
       (async () => {
         setChecking(true);
         const { data } = await checkUser(user.email?.address as string);
@@ -22,6 +24,8 @@ export default function LoginPage() {
         }
         setChecking(false);
       })();
+    }} catch (error: any) {
+      toast.error(error.message)
     }
   }, [user, navigate]);
 
