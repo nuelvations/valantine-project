@@ -14,6 +14,7 @@ export interface IScore extends Document {
   mood: string;
   user1Id: string;
   user2Id: string;
+  isClaimed: boolean;
   comparisons: IScoreComparison[];
   overallScore: number;
   overallFeedback: string;
@@ -38,6 +39,10 @@ const ScoreSchema: Schema = new Schema({
   mood: { 
     type: String,
     required: true 
+  },
+  isClaimed: {
+    type: Boolean,
+    default: false
   },
   comparisons: [{
     questionIndex: { 
