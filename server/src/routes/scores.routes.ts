@@ -157,11 +157,6 @@ router.get("/:questionId", async (req: Request, res: Response) => {
 
     const score = await Score.findOne({ questionId }).lean();
 
-    if (!score) {
-      res.status(404).json({ error: "Score not found" });
-      return;
-    }
-
     res.status(200).json({ score });
   } catch (error) {
     console.error(error);
