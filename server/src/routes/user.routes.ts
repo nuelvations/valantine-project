@@ -56,7 +56,7 @@ router
       res.status(500).json({ error: "Failed to check user" });
     }
   })
-  .get("/:userId", async (req: Request, res: Response) => {
+  .get("/:userId/stats", async (req: Request, res: Response) => {
     try {
       const { userId } = req.params;
 
@@ -68,9 +68,9 @@ router
       }
 
       res.status(200).json({
-        user1: userFound || null,
-        totalQuestions: "",
-        compatibilityScore: "",
+        totalPoints: userFound.totalPoints,
+        questionsCreated: userFound.questionsCreated,
+        moneyEarned: userFound.moneyEarned,
       });
     } catch (error) {
       console.error(error);
