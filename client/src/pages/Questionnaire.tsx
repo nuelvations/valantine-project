@@ -14,13 +14,16 @@ export default function Questionnaire() {
   const [submitting, setSubmitting] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<string[]>([]);
-  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState({
+    username: "",
+    _id: ""
+  });
 
   useEffect(() => {
     fetchQuestion();
     const storedUser = getUser();
     if (storedUser) {
-      setUserId(storedUser._id);
+      setUser(storedUser);
     } else {
       toast.error('User not found. Please log in again.');
       navigate('/login');
@@ -81,7 +84,8 @@ export default function Questionnaire() {
 
       await submitAnswers({
         questionId: questionId!,
-        userId,
+        username: user.username,
+        userId: user._id,
         answers: formattedAnswers,
       });
 
