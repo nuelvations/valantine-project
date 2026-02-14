@@ -157,12 +157,12 @@ export default function Dashboard() {
             <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-gray-600 font-semibold text-sm uppercase tracking-wide">
-                  Money Earned
+                  Tangles Earned
                 </h3>
                 <span className="text-3xl">💰</span>
               </div>
               <p className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                ${stats.moneyEarned.toFixed(2)}
+                {stats.moneyEarned.toFixed(2)} $TANGLE
               </p>
               <p className="text-gray-500 text-sm mt-2">Earnings from claimed matches</p>
             </div>

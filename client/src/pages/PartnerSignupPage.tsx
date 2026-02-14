@@ -4,7 +4,7 @@ import { usePrivy } from '@privy-io/react-auth';
 import toast from 'react-hot-toast';
 import { getQuestion, checkUser, loginUser } from '../utils/api';
 import type { Question } from '../utils/types';
-import { setUser } from '../utils/auth';
+import { getUser, setUser } from '../utils/auth';
 
 export default function PartnerSignupPage() {
   const { questionId } = useParams<{ questionId: string }>();
@@ -29,7 +29,10 @@ export default function PartnerSignupPage() {
 
   const fetchQuestion = async () => {
     try {
-      const response = await getQuestion(questionId!);
+      const storedUser = getUser();
+
+      const response = await getQuestion(questionId!, storedUser._id ?? "");
+
       setQuestion(response.data);
     } catch (error) {
       console.error('Error fetching question:', error);
