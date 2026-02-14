@@ -45,9 +45,9 @@ router.get("/has-partner-answered/:questionId", async (req: Request, res: Respon
   try {
     const { questionId } = req.params;
 
-    const answer = await Answer.findOne({ questionId });
+    const answers = await Answer.find({ questionId });
 
-    if (!answer?.answers || answer.answers.length <= 1) {
+    if (answers.length <= 1) {
       res.status(200).json({ hasAnswered: false });
       return;
     }
