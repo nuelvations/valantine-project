@@ -40,9 +40,10 @@ export const getQuestionsByUser = (userId: string) =>
 export const submitAnswers = (data: {
   questionId: string;
   userId: string;
+  username: string;
   answers: Array<{ question: string; answer: string }>;
 }) => apiClient.post('/answers/submit', data);
-
+ 
 export const getUserAnswers = (questionId: string, userId: string) =>
   apiClient.get(`/answers/${questionId}/${userId}`);
 
