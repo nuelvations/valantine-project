@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from "express";
 import { QuestionGeneratorService } from "@/services/QuestionGeneratorService";
 import Question from "@/models/question.model";
 import user from "@/models/user.model";
+import answerModel from "@/models/answer.model";
 
 const router = Router();
 
@@ -78,11 +79,14 @@ router.get("/:questionId", async (req: Request, res: Response) => {
       return;
     }
 
+    const answer = await answerModel.findOne({ questionId, userId: req.query.userId }).lean();
+
     res.status(200).json({
       questionId: question._id,
       mood: question.mood,
       moodDescription: question.moodDescription,
       questions: question.questions,
+      questionCompleted: !!answer,
     });
   } catch (error) {
     console.error(error);

@@ -30,8 +30,8 @@ export const createQuestion = (data: {
   context: string;
 }) => apiClient.post('/questions/generate', data);
 
-export const getQuestion = (questionId: string) =>
-  apiClient.get(`/questions/${questionId}`);
+export const getQuestion = (questionId: string, userId: string) =>
+  apiClient.get(`/questions/${questionId}?userId=${userId}`);
 
 export const getQuestionsByUser = (userId: string) =>
   apiClient.get(`/questions/user/${userId}`);

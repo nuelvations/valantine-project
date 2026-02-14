@@ -33,7 +33,13 @@ export default function Questionnaire() {
   const fetchQuestion = async () => {
     try {
       setLoading(true);
-      const response = await getQuestion(questionId!);
+
+      const response = await getQuestion(questionId!, user._id);
+      if (response.data.questionCompleted) {
+        navigate(`/results/${questionId}`);
+        return;
+      }
+
       setQuestion(response.data);
       setAnswers(new Array(response.data.questions.length).fill(''));
     } catch (error) {
