@@ -4,6 +4,8 @@ import Answer from "@/models/answer.model";
 import Question from "@/models/question.model";
 import Score from "@/models/score.model";
 import userModel from "@/models/user.model";
+import { claimTangle } from "@/utils/account";
+import type { Address } from "viem";
 
 const router = Router();
 
@@ -114,28 +116,51 @@ router.post("/claim/:scoreId", async (req: Request, res: Response) => {
   try {
     const { scoreId } = req.params as { scoreId: string };
 
+    const { recipientAddress, userId } = req.query;
+
     const score = await Score.findById(scoreId);
     if (!score) {
       res.status(404).json({ error: "Score not found" });
       return;
     }
 
-    const user1 = await userModel.findById(score.user1Id);
-    const user2 = await userModel.findById(score.user2Id);
-    if (!user1 || !user2) {
-      res.status(400).json({ error: " one of the user id attached is invalid" });
+    // Check if user has already claimed this score
+    const hasUserClaimed = score.user1Id === userId ? score.user1Claimed : score.user2Id === userId ? score.user2Claimed : null;
+    if (hasUserClaimed === null) {
+      res.status(400).json({ error: "Invalid user ID for this score" });
+      return;
+    }
+    if (hasUserClaimed) {
+      res.status(400).json({ error: "You have already claimed this score" });
       return;
     }
 
-    // Update score to indicate it's claimed
-    score.isClaimed = true;
+    if (score.overallScore < 80) {
+      res.status(400).json({ error: "Score is below the minimum threshold of 80%" });
+      return;
+    }
 
-    user1.totalPoints += score.totalPoints;
-    user2.totalPoints += score.totalPoints;
+    const claimUser = await userModel.findById(userId);
+    if (!claimUser) {
+      res.status(400).json({ error: "Invalid user ID" });
+      return;
+    }
+
+    // Claim points using Tangle
+    await claimTangle(recipientAddress as unknown as Address);
+
+    // Mark the claiming user's status
+    if (score.user1Id === userId) {
+      score.user1Claimed = true;
+    } else if (score.user2Id === userId) {
+      score.user2Claimed = true;
+    }
+
+    claimUser.totalPoints += score.totalPoints;
+    claimUser.moneyEarned += 100;
 
     await score.save();
-    await user1.save();
-    await user2.save();
+    await claimUser.save();
 
     res.status(200).json({
       message: "Score claimed successfully",
@@ -157,7 +182,12 @@ router.get("/:questionId", async (req: Request, res: Response) => {
 
     const score = await Score.findOne({ questionId }).lean();
 
-    res.status(200).json({ score });
+    const scoreWithClaimed = {
+      ...score,
+      isClaimed: score ? (score.user1Claimed && score.user2Claimed) : false,
+    }
+
+    res.status(200).json({ score: scoreWithClaimed });
   } catch (error) {
     console.error(error);
     res.status(500).json({
